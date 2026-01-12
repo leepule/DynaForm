@@ -2,7 +2,13 @@
     "name": "dyna-form",
     "version": "1.0.0",
     "description": "DynaForm - A Data-Driven Vue 2 Form Component Library",
-    "main": "src/index.js",
+    "main": "dist/dyna-form.common.js",
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE",
+        "package.json"
+    ],
     "keywords": [
         "vue",
         "element-ui",
@@ -14,6 +20,7 @@
     ],
     "scripts": {
         "serve": "vue-cli-service serve demo/main.js",
+        "build:lib": "vue-cli-service build --target lib --name dyna-form src/index.js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "docs:install": "cd docs && npm install",
         "docs:dev": "cd docs && npm run dev",
