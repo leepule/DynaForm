@@ -1,0 +1,30 @@
+// 覆盖 VuePress 默认样式中对 ElementUI 的影响
+
+// 1. 修复表格样式冲突
+// VuePress 默认会对所有 table 应用样式，这会破坏 ELTable 的布局
+.el-table
+  table
+    margin 0 !important
+    display table !important
+    overflow visible !important
+  tr
+    border-top none !important
+    background-color transparent !important
+  th, td
+    border none !important
+
+// 2. 修复代码块样式可能对组件内部元素的影响
+div[class*="language-"]
+  .el-button, .el-tag, .el-input__inner
+    color initial
+
+// 3. 修复 Element UI 图标字体路径问题 (如果在 docs 中遇到)
+// 通常在 enhanceApp.js 引入 css 即可，这里作为备用
+
+// 4. 修复 label 样式干扰
+.el-form-item__label
+    border-bottom none !important
+
+// 5. 针对 demo-card 的一般优化
+.demo-card
+    background-color #fff
