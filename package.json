@@ -17,7 +17,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "docs:install": "cd docs && npm install",
         "docs:dev": "cd docs && npm run dev",
-        "docs:build": "cd docs && npm run build"
+        "docs:build": "cd docs && npm run build",
+        "docs:deploy": "sh deploy.sh"
     },
     "peerDependencies": {
         "vue": "2.7.16",

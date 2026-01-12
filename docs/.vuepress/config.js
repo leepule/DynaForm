@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
   title: 'DynaForm',
   description: 'DynaForm - 基于 Element UI 的数据驱动型表单组件库',
+  base: '/DynaForm/',
   themeConfig: {
     nav: [
       { text: '指南', link: '/guide/installation' },
