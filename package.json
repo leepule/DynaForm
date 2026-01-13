@@ -1,7 +1,15 @@
 {
-    "name": "dyna-form",
+    "name": "@leesorry/dyna-form",
     "version": "1.0.0",
     "description": "DynaForm - A Data-Driven Vue 2 Form Component Library",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/leepule/DynaForm.git"
+    },
+    "homepage": "https://leepule.github.io/DynaForm",
+    "bugs": {
+        "url": "https://github.com/leepule/DynaForm/issues"
+    },
     "main": "dist/dyna-form.common.js",
     "files": [
         "dist",
@@ -25,7 +33,8 @@
         "docs:install": "cd docs && npm install",
         "docs:dev": "cd docs && npm run dev",
         "docs:build": "cd docs && npm run build",
-        "docs:deploy": "sh deploy.sh"
+        "docs:deploy": "sh deploy.sh",
+        "release": "sh release.sh"
     },
     "peerDependencies": {
         "vue": "2.7.16",
