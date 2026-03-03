@@ -58,23 +58,23 @@ export default {
       val3: 5,
       val4: 100,
       config1: {
-        type: 'number',
+        type: 'NUMBOX',
         label: '数量'
       },
       config2: {
-        type: 'number',
+        type: 'NUMBOX',
         label: '金额',
         step: 0.1,
         precision: 2
       },
       config3: {
-        type: 'number',
+        type: 'NUMBOX',
         label: '评分',
         min: 0,
         max: 10
       },
       config4: {
-        type: 'number',
+        type: 'NUMBOX',
         label: '库存',
         disabled: true
       }
@@ -108,14 +108,14 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <!-- 1. 基础用法 -->
 <DynaForm
   v-model="count"
-  :config="{ type: 'number', label: '数量' }"
+  :config="{ type: 'NUMBOX', label: '数量' }"
 />
 
 <!-- 2. 步长与精度 -->
 <DynaForm
   v-model="money"
   :config="{ 
-    type: 'number', 
+    type: 'NUMBOX', 
     label: '金额',
     step: 0.1,
     precision: 2
@@ -126,7 +126,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <DynaForm
   v-model="score"
   :config="{ 
-    type: 'number', 
+    type: 'NUMBOX', 
     label: '评分',
     min: 0,
     max: 10

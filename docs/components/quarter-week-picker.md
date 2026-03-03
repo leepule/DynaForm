@@ -1,4 +1,4 @@
-# 多周期选择器 (MultiPeriodPicker)
+# 季度周选择组件宣
 
 支持按周、按季度选择，并且支持多选的周期选择器。
 
@@ -11,12 +11,12 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="demo-label">多选 (Multiple)</div>
-        <MultiPeriodPicker v-model="weekVal1" :multiple="true" />
+        <DynaForm v-model="weekVal1" :config="{ type: 'DATEPKR', timeType: 'week', multiple: true }" />
         <div class="demo-value">Value: {{ weekVal1 }}</div>
       </el-col>
       <el-col :span="12">
         <div class="demo-label">单选 (Single)</div>
-        <MultiPeriodPicker v-model="weekVal2" />
+        <DynaForm v-model="weekVal2" :config="{ type: 'DATEPKR', timeType: 'week' }" />
         <div class="demo-value">Value: {{ weekVal2 }}</div>
       </el-col>
     </el-row>
@@ -30,12 +30,12 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="demo-label">多选 (Multiple)</div>
-        <MultiPeriodPicker v-model="quarterVal1" type="quarter" :multiple="true" />
+        <DynaForm v-model="quarterVal1" :config="{ type: 'DATEPKR', timeType: 'quarter', multiple: true }" />
         <div class="demo-value">Value: {{ quarterVal1 }}</div>
       </el-col>
       <el-col :span="12">
         <div class="demo-label">单选 (Single)</div>
-        <MultiPeriodPicker v-model="quarterVal2" type="quarter" />
+        <DynaForm v-model="quarterVal2" :config="{ type: 'DATEPKR', timeType: 'quarter' }" />
         <div class="demo-value">Value: {{ quarterVal2 }}</div>
       </el-col>
     </el-row>
@@ -82,16 +82,16 @@ export default {
 
 ```vue
 <!-- 按周多选 -->
-<MultiPeriodPicker v-model="value1" :multiple="true" />
+<DynaForm v-model="value1" :config="{ type: 'DATEPKR', timeType: 'week', multiple: true }" />
 
 <!-- 按周单选 (默认) -->
-<MultiPeriodPicker v-model="value2" />
+<DynaForm v-model="value2" :config="{ type: 'DATEPKR', timeType: 'week' }" />
 
 <!-- 按季度多选 -->
-<MultiPeriodPicker v-model="value3" type="quarter" :multiple="true" />
+<DynaForm v-model="value3" :config="{ type: 'DATEPKR', timeType: 'quarter', multiple: true }" />
 
 <!-- 按季度单选 -->
-<MultiPeriodPicker v-model="value4" type="quarter" />
+<DynaForm v-model="value4" :config="{ type: 'DATEPKR', timeType: 'quarter' }" />
 ```
 
 ## 属性列表 (Attributes)

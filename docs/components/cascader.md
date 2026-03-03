@@ -73,21 +73,21 @@ export default {
       ],
       
       config1: {
-        type: 'cascader',
+        type: 'CASCADPKR',
         label: '地区'
       },
       config2: {
-        type: 'cascader',
+        type: 'CASCADPKR',
         label: '任意级',
         checkStrictly: true
       },
       config3: {
-        type: 'cascader',
+        type: 'CASCADPKR',
         label: '多选',
         multiple: true
       },
       config4: {
-        type: 'cascader',
+        type: 'CASCADPKR',
         label: '折叠显示',
         multiple: true,
         collapseTags: true
@@ -109,21 +109,21 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <!-- 1. 基础单选 -->
 <DynaForm
   v-model="val"
-  :config="{ type: 'cascader', label: '地区' }"
+  :config="{ type: 'CASCADPKR', label: '地区' }"
   :options="options"
 />
 
 <!-- 2. 任意级可选 -->
 <DynaForm
   v-model="val"
-  :config="{ type: 'cascader', label: '任意级', checkStrictly: true }"
+  :config="{ type: 'CASCADPKR', label: '任意级', checkStrictly: true }"
   :options="options"
 />
 
 <!-- 3. 多选 -->
 <DynaForm
   v-model="val"
-  :config="{ type: 'cascader', label: '多选', multiple: true }"
+  :config="{ type: 'CASCADPKR', label: '多选', multiple: true }"
   :options="options"
 />
 ```

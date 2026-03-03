@@ -14,13 +14,38 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <h4>日期选择 (Date)</h4>
-        <DynaForm v-model="dateVal" :config="dateConfig" />
+        <DynaForm
+          v-model="dateVal"
+          :config="dateConfig"
+        />
         <div class="demo-value">Value: {{ dateVal }}</div>
       </el-col>
       <el-col :span="12">
-         <h4>日期范围 (DateRange)</h4>
-         <DynaForm v-model="rangeVal" :config="rangeConfig" />
-         <div class="demo-value">Value: {{ rangeVal }}</div>
+        <h4>快捷选项 (Shortcuts)</h4>
+        <DynaForm
+          v-model="shortVal"
+          :config="shortConfig"
+        />
+        <div class="demo-value">Value: {{ shortVal }}</div>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20" style="margin-top:20px;">
+      <el-col :span="12">
+        <h4>日期范围 (Daterange)</h4>
+        <DynaForm
+          v-model="rangeVal"
+          :config="{ type: 'DATEPKR', timeType: 'daterange', startPlaceholder: '开始', endPlaceholder: '结束' }"
+        />
+        <div class="demo-value">Value: {{ rangeVal }}</div>
+      </el-col>
+      <el-col :span="12">
+        <h4>月份范围 (Monthrange)</h4>
+        <DynaForm
+          v-model="monthRangeVal"
+          :config="{ type: 'DATEPKR', timeType: 'monthrange', rangeSeparator: '至' }"
+        />
+        <div class="demo-value">Value: {{ monthRangeVal }}</div>
       </el-col>
     </el-row>
 
@@ -43,33 +68,51 @@
 export default {
   data() {
     return {
-      dateVal: '',
+      dateVal: '2023-10-24',
+      shortVal: '',
       rangeVal: [],
+      monthRangeVal: [],
       dateTimeVal: '',
       monthVal: '',
       
       dateConfig: {
-        type: 'date',
-        label: '入职日期',
-        format: 'yyyy-MM-dd',
-        valueFormat: 'yyyy-MM-dd'
+        type: 'DATEPKR',
+        label: '选择日期'
+      },
+      shortConfig: {
+        type: 'DATEPKR',
+        label: '快捷选择',
+        pickerOptions: {
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) { picker.$emit('pick', new Date()); }
+          }, {
+            text: '昨天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          }]
+        }
       },
       rangeConfig: {
-        type: 'daterange',
+        type: 'DATEPKR',
+        timeType: 'daterange',
         label: '查询区间',
         startPlaceholder: '开始',
         endPlaceholder: '结束',
         valueFormat: 'yyyy-MM-dd'
       },
       dateTimeConfig: {
-        type: 'datetime',
+        type: 'DATEPKR',
         timeType: 'datetime',
         label: '预定时间',
         format: 'yyyy-MM-dd HH:mm',
         valueFormat: 'yyyy-MM-dd HH:mm'
       },
       monthConfig: {
-        type: 'date',
+        type: 'DATEPKR',
         timeType: 'month',
         label: '月报账期',
         format: 'yyyy-MM',
@@ -111,7 +154,7 @@ h4 {
 <DynaForm
   v-model="date"
   :config="{
-    type: 'date',
+    type: 'DATEPKR',
     label: '日期',
     format: 'yyyy-MM-dd',
     valueFormat: 'yyyy-MM-dd'
@@ -122,7 +165,8 @@ h4 {
 <DynaForm
   v-model="range"
   :config="{
-    type: 'daterange',
+    type: 'DATEPKR',
+    timeType: 'daterange',
     label: '时间范围',
     startPlaceholder: '开始',
     endPlaceholder: '结束'
@@ -133,7 +177,7 @@ h4 {
 <DynaForm
   v-model="datetime"
   :config="{
-    type: 'datetime',
+    type: 'DATEPKR',
     timeType: 'datetime',
     label: '精确时间'
   }"
@@ -143,7 +187,7 @@ h4 {
 <DynaForm
   v-model="month"
   :config="{
-    type: 'date',
+    type: 'DATEPKR',
     timeType: 'month',
     label: '月份',
     format: 'yyyy-MM',

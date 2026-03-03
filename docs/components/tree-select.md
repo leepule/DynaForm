@@ -54,19 +54,19 @@ export default {
       leafVal: [],
       
       singleConfig: {
-        type: 'selecttree',
+        type: 'SELTREE',
         label: '部门(单选)',
         checkStrictly: true // 允许选择任意节点
       },
       multiConfig: {
-        type: 'selecttree',
+        type: 'SELTREE',
         label: '部门(多选)',
         multiple: true,
         checkStrictly: false, // 级联选择
         disableBranchNodes: false
       },
       leafConfig: {
-         type: 'selecttree',
+         type: 'SELTREE',
          label: '仅选叶子',
          multiple: true,
          disableBranchNodes: true // 禁用分支节点
@@ -113,7 +113,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <DynaForm
   v-model="deptId"
   :config="{
-    type: 'selecttree',
+    type: 'SELTREE',
     label: '部门',
     checkStrictly: true
   }"
@@ -124,7 +124,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <DynaForm
   v-model="deptIds"
   :config="{
-    type: 'selecttree',
+    type: 'SELTREE',
     label: '部门',
     multiple: true,
     checkStrictly: false
@@ -136,7 +136,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <DynaForm
   v-model="leafIds"
   :config="{
-    type: 'selecttree',
+    type: 'SELTREE',
     label: '部门',
     multiple: true,
     disableBranchNodes: true

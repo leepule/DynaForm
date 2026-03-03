@@ -13,18 +13,37 @@
       <el-col :span="12">
         <h4>基础输入 (Basic)</h4>
         <DynaForm
-          v-model="val1"
-          :config="config1"
+          v-model="textVal"
+          :config="textConfig"
         />
-        <div class="demo-value">Value: {{ val1 }}</div>
+        <div class="demo-value">Value: {{ textVal }}</div>
       </el-col>
       <el-col :span="12">
-        <h4>占位符与清空 (Clearable)</h4>
+        <h4>属性增强 (Enhanced)</h4>
         <DynaForm
-          v-model="val2"
-          :config="config2"
+          v-model="limitVal"
+          :config="limitConfig"
         />
-        <div class="demo-value">Value: {{ val2 }}</div>
+        <div class="demo-value">Value: {{ limitVal }}</div>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20" style="margin-top:20px;">
+      <el-col :span="12">
+        <h4>密码模式 (Password)</h4>
+        <DynaForm
+          v-model="passVal"
+          :config="{ type: 'TEXT', showPassword: true, placeholder: '请输入密码' }"
+        />
+        <div class="demo-value">Value: {{ passVal }}</div>
+      </el-col>
+      <el-col :span="12">
+        <h4>文本域 (Textarea)</h4>
+        <DynaForm
+          v-model="areaVal"
+          :config="{ type: 'TEXT', inputType: 'textarea', rows: 3, placeholder: '请输入多行文本' }"
+        />
+        <div class="demo-value">Value: {{ areaVal }}</div>
       </el-col>
     </el-row>
 
@@ -52,23 +71,38 @@
 export default {
   data() {
     return {
+      textVal: 'Hello DynaForm',
+      limitVal: '',
+      passVal: '',
+      areaVal: '第一行\n第二行',
       val1: '',
       val2: '可清空的内容',
       val3: 'Disabled Content',
       val4: '',
+      textConfig: {
+        type: 'TEXT',
+        label: '基础输入',
+        placeholder: '请输入内容'
+      },
+      limitConfig: {
+        type: 'TEXT',
+        label: '带清空按钮',
+        placeholder: '可清空的内容',
+        clearable: true
+      },
       config1: {
-        type: 'text',
+        type: 'TEXT',
         label: '用户名',
         placeholder: '请输入用户名'
       },
       config2: {
-        type: 'text',
+        type: 'TEXT',
         label: '昵称',
         placeholder: '请输入昵称',
         clearable: true
       },
       config3: {
-        type: 'text',
+        type: 'TEXT',
         label: '账号',
         disabled: true
       },

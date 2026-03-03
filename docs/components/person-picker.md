@@ -80,7 +80,7 @@ export default {
       ],
       
       multiConfig: {
-        type: 'personPicker',
+        type: 'PERSONPKR',
         label: '人员多选',
         multiple: true,
         pageSize: 5,
@@ -91,7 +91,7 @@ export default {
         ]
       },
       singleConfig: {
-        type: 'personPicker',
+        type: 'PERSONPKR',
         label: '人员单选',
         multiple: false,
         columns: [
@@ -100,7 +100,7 @@ export default {
         ]
       },
       apiConfig: {
-        type: 'personPicker',
+        type: 'PERSONPKR',
         label: '异步加载',
         multiple: true,
         pageSize: 5,
@@ -170,7 +170,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <DynaForm
   v-model="ids"
   :config="{ 
-      type: 'personPicker', 
+      type: 'PERSONPKR', 
       multiple: true, 
       columns: [{prop: 'name', label: '姓名'}] 
   }"
@@ -185,7 +185,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <DynaForm
   v-model="id"
   :config="{ 
-      type: 'personPicker', 
+      type: 'PERSONPKR', 
       multiple: false, 
       columns: [{prop: 'name', label: '姓名'}] 
   }"
@@ -200,7 +200,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
   <DynaForm
     v-model="ids"
     :config="{
-        type: 'personPicker',
+        type: 'PERSONPKR',
         pageSize: 10,
         columns: [{prop: 'name', label: '姓名'}, {prop: 'email', label: '邮箱'}]
     }"

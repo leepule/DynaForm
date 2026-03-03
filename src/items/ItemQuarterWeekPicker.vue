@@ -40,8 +40,8 @@
         </div>
       </div>
       <!-- 触发输入框 -->
-      <el-input slot="reference" :value="displayValue" :placeholder="currentPlaceholder" :size="size" readonly prefix-icon="el-icon-date"
-        class="picker-input">
+      <el-input slot="reference" :value="displayValue" :placeholder="currentPlaceholder" :size="size" readonly
+        prefix-icon="el-icon-date" class="picker-input">
         <template v-if="selectedValues.length > 0" slot="suffix">
           <i class="el-select__caret el-input__icon el-icon-circle-close clear-icon" @click.stop="handleClear"></i>
         </template>
@@ -51,20 +51,15 @@
 </template>
 <script>
   export default {
-    name: 'MultiPeriodPicker',
+    name: 'ItemQuarterWeekPicker',
     props: {
       value: {
-        type: Array,
+        type: [Array, String],
         default: () => []
       },
       config: {
         type: Object,
         default: () => ({})
-      },
-      type: {
-        type: String,
-        default: 'week',
-        validator: (val) => ['week', 'quarter'].includes(val)
       },
       multiple: {
         type: Boolean,
@@ -88,7 +83,7 @@
     },
     computed: {
       currentType() {
-        return this.config.periodType || this.type;
+        return this.config.timeType;
       },
       isMultiple() {
         return this.config.multiple !== undefined ? this.config.multiple : this.multiple;
@@ -108,7 +103,7 @@
 
           weeks.push({
             week: i,
-            value: this.formatDateFull(weekStart),
+            value: this.getFormattedValue(this.currentYear, i),
             range: `${this.formatDate(weekStart)} 至 ${this.formatDate(weekEnd)}`
           })
         }
@@ -123,7 +118,7 @@
         ]
         return quarters.map(q => ({
           ...q,
-          value: this.getQuarterStartDate(this.currentYear, q.quarter)
+          value: this.getFormattedValue(this.currentYear, q.quarter)
         }))
       },
       displayValue() {
@@ -142,7 +137,17 @@
       value: {
         immediate: true,
         handler(val) {
-          this.selectedValues = val || []
+          if (this.isMultiple) {
+            if (typeof val === 'string' && val) {
+              this.selectedValues = val.split(',');
+            } else if (Array.isArray(val)) {
+              this.selectedValues = [...val];
+            } else {
+              this.selectedValues = [];
+            }
+          } else {
+            this.selectedValues = val ? [val] : [];
+          }
         }
       },
       visible(val) {
@@ -167,31 +172,43 @@
         return `${month}-${day}`
       },
       formatSelectedValue(value) {
-        const date = new Date(value)
-        const year = date.getFullYear()
+        const strVal = String(value);
+        const yearMatch = strVal.match(/^(\d{4})/);
+        const year = yearMatch ? yearMatch[1] : this.currentYear;
+
+        const restVal = yearMatch ? strVal.slice(4) : strVal;
+        const numMatch = restVal.match(/(\d+)/);
+        const num = numMatch ? parseInt(numMatch[1], 10) : '';
 
         if (this.currentType === 'week') {
-          const weekNum = this.getWeekNumber(date)
-          return `${year}年第${weekNum}周`
+          return `${year}年第${num}周`
         } else {
-          const quarter = Math.floor(date.getMonth() / 3) + 1
-          return `${year}年第${quarter}季度`
+          return `${year}年第${num}季度`
         }
       },
-      getWeekNumber(date) {
-        const year = date.getFullYear()
-        const targetTime = date.getTime()
-
-        for (let i = 1; i <= 52; i++) {
-          const weekStart = this.getWeekStartDate(year, i)
-          const weekEnd = new Date(weekStart)
-          weekEnd.setDate(weekEnd.getDate() + 6)
-
-          if (targetTime >= weekStart.getTime() && targetTime <= weekEnd.getTime()) {
-            return i
-          }
+      getFormattedValue(year, period) {
+        let format = this.config.format;
+        if (!format) {
+          format = this.currentType === 'week' ? 'yyyy-ww' : 'yyyy-Q';
         }
-        return 1
+        let result = format.replace(/yyyy/gi, year);
+        if (this.currentType === 'week') {
+          const pStr = String(period).padStart(format.toLowerCase().includes('ww') ? 2 : 1, '0');
+          result = result.replace(/ww/gi, pStr).replace(/w/gi, period);
+        } else {
+          result = result.replace(/[Qq]/g, String(period).padStart(2, '0'));
+        }
+        return result;
+      },
+      emitChange() {
+        let val;
+        if (this.isMultiple) {
+          val = this.selectedValues.join(',');
+        } else {
+          val = this.selectedValues[0] || '';
+        }
+        this.$emit('input', val);
+        this.$emit('change', val);
       },
       isSelected(value) {
         return this.selectedValues.includes(value)
@@ -217,13 +234,11 @@
       },
       handleClear() {
         this.selectedValues = []
-        this.$emit('input', [])
-        this.$emit('change', [])
+        this.emitChange()
         this.visible = false
       },
       handleConfirm() {
-        this.$emit('input', this.selectedValues)
-        this.$emit('change', this.selectedValues)
+        this.emitChange()
         this.visible = false
       },
       getQuarterStartDate(year, quarter) {
@@ -239,8 +254,11 @@
       },
       initCurrentYear() {
         if (this.selectedValues.length) {
-          const date = new Date(this.selectedValues[0])
-          this.currentYear = date.getFullYear()
+          const strVal = String(this.selectedValues[0]);
+          const yearMatch = strVal.match(/^(\d{4})/);
+          if (yearMatch) {
+            this.currentYear = parseInt(yearMatch[1], 10);
+          }
         }
       },
       scrollToSelection() {
@@ -258,185 +276,186 @@
   }
 </script>
 <style lang="scss" scoped>
-.multi-period-picker {
-  width: 100%;
-  .clear-icon {
-    cursor: pointer;
-  }
-}
+  .multi-period-picker {
+    width: 100%;
 
-.picker-input .el-input__inner {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.multi-period-picker-popper {
-  .picker-panel {
-    padding: 0;
-  }
-
-  .picker-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 40px;
-    padding: 0 12px;
-    margin: 0;
-    border-bottom: 1px solid #E4E7ED;
-
-    .header-btn {
-      background: none;
-      border: none;
-      color: #606266;
-      font-size: 16px;
+    .clear-icon {
       cursor: pointer;
-      padding: 4px;
-      line-height: 1;
-      transition: color 0.2s;
+    }
+  }
 
-      &:hover {
-        color: #409EFF;
+  .picker-input .el-input__inner {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .multi-period-picker-popper {
+    .picker-panel {
+      padding: 0;
+    }
+
+    .picker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 40px;
+      padding: 0 12px;
+      margin: 0;
+      border-bottom: 1px solid #E4E7ED;
+
+      .header-btn {
+        background: none;
+        border: none;
+        color: #606266;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 4px;
+        line-height: 1;
+        transition: color 0.2s;
+
+        &:hover {
+          color: #409EFF;
+        }
+      }
+
+      .current-year {
+        font-size: 16px;
+        font-weight: 500;
+        color: #303133;
+        flex: 1;
+        text-align: center;
       }
     }
 
-    .current-year {
-      font-size: 16px;
-      font-weight: 500;
-      color: #303133;
-      flex: 1;
+    .picker-content {
+      padding: 16px 12px;
+      max-height: 300px;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #fff;
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #DCDFE6;
+        border-radius: 3px;
+
+        &:hover {
+          background: #909399;
+        }
+      }
+    }
+
+    .week-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .week-item {
+      padding: 6px 4px;
       text-align: center;
-    }
-  }
-
-  .picker-content {
-    padding: 16px 12px;
-    max-height: 300px;
-    overflow-y: auto;
-    
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #fff;
-      border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #DCDFE6;
-      border-radius: 3px;
-
-      &:hover {
-        background: #909399;
-      }
-    }
-  }
-
-  .week-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
-
-  .week-item {
-    padding: 6px 4px;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-    color: #606266;
-
-    &:hover {
-      background-color: #F5F7FA;
-    }
-
-    &.is-selected {
-      background-color: #409EFF;
-      color: #fff;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-
-    .week-label {
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 2px;
-    }
-
-    .week-range {
-      font-size: 11px;
-      opacity: 0.85;
-      white-space: nowrap;
-    }
-  }
-
-  .quarter-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-
-  .quarter-item {
-    padding: 12px 4px;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s;
-    border: 1px solid #DCDFE6;
-    color: #606266;
-
-    &:hover {
-      border-color: #409EFF;
-      background-color: #F5F7FA;
-    }
-
-    &.is-selected {
-      border-color: #409EFF;
-      background-color: #409EFF;
-      color: #fff;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-
-    .quarter-label {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 6px;
-    }
-
-    .quarter-range {
-      font-size: 12px;
-      opacity: 0.85;
-    }
-  }
-
-  .picker-footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-top: 1px solid #E4E7ED;
-    background-color: #fff; 
-    
-    .el-button--text {
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
       color: #606266;
+
       &:hover {
-        color: #409EFF;
+        background-color: #F5F7FA;
+      }
+
+      &.is-selected {
+        background-color: #409EFF;
+        color: #fff;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .week-label {
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+
+      .week-range {
+        font-size: 11px;
+        opacity: 0.85;
+        white-space: nowrap;
+      }
+    }
+
+    .quarter-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .quarter-item {
+      padding: 12px 4px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      border: 1px solid #DCDFE6;
+      color: #606266;
+
+      &:hover {
+        border-color: #409EFF;
+        background-color: #F5F7FA;
+      }
+
+      &.is-selected {
+        border-color: #409EFF;
+        background-color: #409EFF;
+        color: #fff;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .quarter-label {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+      }
+
+      .quarter-range {
+        font-size: 12px;
+        opacity: 0.85;
+      }
+    }
+
+    .picker-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-top: 1px solid #E4E7ED;
+      background-color: #fff;
+
+      .el-button--text {
+        color: #606266;
+
+        &:hover {
+          color: #409EFF;
+        }
       }
     }
   }
-}
 </style>
-
 <style lang="scss">
-.multi-period-picker-popper {
-  padding: 0 !important;
-}
+  .multi-period-picker-popper {
+    padding: 0 !important;
+  }
 </style>

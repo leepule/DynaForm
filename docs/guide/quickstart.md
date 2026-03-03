@@ -15,10 +15,11 @@
       <el-form-item label="用户名">
         <DynaForm
           v-model="form.username"
-          :config="{ 
-            type: 'text', 
-            placeholder: '请输入用户名',
-            clearable: true 
+          :config="{
+            label: '姓名',
+            type: 'TEXT',
+            prop: 'name',
+            placeholder: '请输入姓名'
           }"
         />
       </el-form-item>
@@ -27,10 +28,14 @@
       <el-form-item label="角色">
         <DynaForm
           v-model="form.role"
-          :config="{ 
-            type: 'select', 
-            label: '角色选择',
-            multiple: false 
+          :config="{
+            label: '性别',
+            type: 'SELECTPKR',
+            prop: 'gender',
+            options: [
+                { label: '男', value: '1' },
+                { label: '女', value: '2' }
+            ]
           }"
           :options="roleOptions"
         />

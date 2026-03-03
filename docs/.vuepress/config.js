@@ -23,17 +23,31 @@ module.exports = {
       ],
       '/components/': [
         {
-          title: '组件列表',
+          title: '基础组件',
           collapsable: false,
           children: [
             'text',
             'number',
             'select',
-            'date-picker',
+            'switch',
+            'date-picker'
+          ]
+        },
+        {
+          title: '高级组件',
+          collapsable: false,
+          children: [
             'cascader',
             'tree-select',
             'person-picker',
-            'multi-period-picker'
+            'quarter-week-picker'
+          ]
+        },
+        {
+          title: '示例展示',
+          collapsable: false,
+          children: [
+            'full-demo'
           ]
         }
       ]

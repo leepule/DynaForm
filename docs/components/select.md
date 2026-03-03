@@ -51,6 +51,28 @@
           <div class="demo-value">Value: {{ createVal }}</div>
       </el-col>
     </el-row>
+
+    <el-row :gutter="20" style="margin-top:20px;">
+      <el-col :span="12">
+          <h4>一键清空 (Clearable)</h4>
+          <DynaForm
+             v-model="clearVal"
+             :config="{ type: 'SELECTPKR', clearable: true, placeholder: '可点击右侧清空' }"
+             :options="basicOptions"
+          />
+          <div class="demo-value">Value: {{ clearVal }}</div>
+      </el-col>
+      <el-col :span="12">
+          <h4>远程搜索 (Remote Search)</h4>
+          <DynaForm
+             v-model="remoteVal"
+             :config="remoteConfig"
+             :options="remoteOptions"
+             @search="handleRemoteSearch"
+          />
+          <div class="demo-value">Value: {{ remoteVal }}</div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -62,6 +84,9 @@ export default {
       multiVal: [1, 2, 3],
       groupVal: '',
       createVal: [],
+      clearVal: 2,
+      remoteVal: '',
+      remoteOptions: [],
 
       basicOptions: [
         { value: 1, label: '苹果' },
@@ -89,29 +114,48 @@ export default {
       ],
 
       singleConfig: {
-        type: 'select',
+        type: 'SELECTPKR',
         label: '水果',
         filterable: true
       },
       multiConfig: {
-        type: 'select',
+        type: 'SELECTPKR',
         label: '多选限制',
         multiple: true,
         limit: 2, // 最多显示2个tag
         filterable: true
       },
       groupConfig: {
-        type: 'select',
+        type: 'SELECTPKR',
         label: '分组选择'
       },
       createConfig: {
-        type: 'select',
+        type: 'SELECTPKR',
         label: '自定义',
         multiple: true,
         filterable: true,
         allowCreate: true
+      },
+      remoteConfig: {
+        type: 'SELECTPKR',
+        filterable: true,
+        remote: true,
+        placeholder: '输入 "a" 试试'
       }
     };
+  },
+  methods: {
+    handleRemoteSearch(query) {
+      if (query !== '') {
+        setTimeout(() => {
+          this.remoteOptions = this.basicOptions.filter(item => {
+            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
+          });
+        }, 200);
+      } else {
+        this.remoteOptions = [];
+      }
+    }
   }
 };
 </script>
@@ -141,7 +185,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <!-- 1. 基础单选 -->
 <DynaForm
   v-model="value"
-  :config="{ type: 'select', label: '单选', filterable: true }"
+  :config="{ type: 'SELECTPKR', label: '单选', filterable: true }"
   :options="options"
 />
 
@@ -149,7 +193,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <DynaForm
   v-model="tags"
   :config="{ 
-      type: 'select', 
+      type: 'SELECTPKR', 
       multiple: true, 
       limit: 2, 
       filterable: true 
@@ -160,7 +204,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <!-- 3. 分组 -->
 <DynaForm
   v-model="group"
-  :config="{ type: 'select' }"
+  :config="{ type: 'SELECTPKR' }"
   :options="[
      { label: 'Group A', options: [...] },
      { label: 'Group B', options: [...] }
@@ -171,7 +215,7 @@ h4 { margin-top: 0; font-size: 14px; margin-bottom: 10px; }
 <DynaForm
   v-model="newTags"
   :config="{ 
-      type: 'select', 
+      type: 'SELECTPKR', 
       multiple: true, 
       allowCreate: true,
       filterable: true
