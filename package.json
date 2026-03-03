@@ -1,6 +1,6 @@
 {
     "name": "@leesorry/dyna-form",
-    "version": "1.0.1",
+    "version": "2.0.0",
     "description": "DynaForm - A Data-Driven Vue 2 Form Component Library",
     "repository": {
         "type": "git",
